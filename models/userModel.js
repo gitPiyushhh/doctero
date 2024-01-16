@@ -26,6 +26,11 @@ const userSchema = new mongoose.Schema({
     passwordChangedAt: {
       type: Date,
     },
+
+    phone: {
+      type: String,
+      default: null
+    }
   });
 
 // Password update (encrypted version)

@@ -1,5 +1,5 @@
 const express = require('express');
-const morgan = require('morgan');
+const morgan = require('morgan'); 
 const cors = require('cors')
 
 const appointmentRouter = require('./routes/appointmentRoutes');
@@ -34,7 +34,7 @@ app.all('*', (req, res, next) => {
   next(new AppError(`Caan't find ${req.originalUrl} on this server!`, 404))
 })
 
-// Middleware call for global erro handler
+// Middleware call for global error handler
 app.use(globalAppError)
 
 module.exports = app;
