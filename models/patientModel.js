@@ -2,16 +2,17 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const patientSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-    unique: true,
-  },
+  // user: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'User',
+  //   required: true,
+  //   unique: true,
+  // },
   name: {
     type: String,
     required: [true, 'A patient must have a name'],
   },
+  gender: String,
   rating: {
     type: Number, // If present then golden star else grey
   },
@@ -45,7 +46,7 @@ const patientSchema = new mongoose.Schema({
       enum: ['UP'],
       required: [true, 'A patient must have a state'],
     },
-    loaction: {
+    location: {
       type: {
         type: String,
         default: 'Point',
@@ -83,7 +84,7 @@ const patientSchema = new mongoose.Schema({
   },
   zone: {
     type: String,
-    required: [true, 'A patient must have a zone'],
+    required: [false, 'A patient must have a zone'],
     enum: ['Lalbangla', 'Mallroad', 'Kalyanpur', 'Civil lines'], // Adjust as per city
   },
 });
