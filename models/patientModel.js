@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const patientSchema = new mongoose.Schema({
-  // user: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'User',
-  //   required: true,
-  //   unique: true,
-  // },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: false,
+    unique: true,
+  },
   name: {
     type: String,
     required: [true, 'A patient must have a name'],
@@ -36,14 +36,10 @@ const patientSchema = new mongoose.Schema({
     },
     city: {
       type: String,
-      default: 'Kanpur',
-      enum: ['Kanpur'],
       required: [true, 'A patient must have a city'],
     },
     state: {
       type: String,
-      default: 'UP',
-      enum: ['UP'],
       required: [true, 'A patient must have a state'],
     },
     location: {
@@ -70,20 +66,16 @@ const patientSchema = new mongoose.Schema({
   billing: {
     invoices: [
       {
-        date: {
-          type: Date,
-        },
-        amount: {
-          type: Number,
-        },
-        status: {
-          type: String, // Paid, Unpaid, etc.
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Invoice',
+        required: false,
+        unique: true,
       },
     ],
   },
   zone: {
     type: String,
+    required: [false, 'A patient must have a zone'],
     required: [false, 'A patient must have a zone'],
     enum: ['Lalbangla', 'Mallroad', 'Kalyanpur', 'Civil lines'], // Adjust as per city
   },

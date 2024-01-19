@@ -4,28 +4,37 @@ const validator = require('validator');
 const therapistSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'A therapist must have a name'],
+    required: [true, 'A doctor must have a name'],
   },
   image: {
     type: String,
   },
   address: {
     type: String,
-    required: [true, 'A therapist must have an address'],
+    required: [true, 'A doctor must have an address'],
+  },
+  state: {
+    type: String,
+    required: [true, 'A doctor must have an state'],
+  },
+  city: {
+    type: String,
+    required: [true, 'A doctor must have an state'],
   },
   aadharNumber: {
     type: String,
     required: true,
+    unique: true,
   },
   phone: {
     type: String,
     required: [true, 'A patient must have an mobile number'],
-    unique: true,
+    // unique: true,
     validate: {
-        validator: function (v) {
-            const phoneRegex = /^[6-9]\d{9}$/;
-            return phoneRegex.test(v);
-          },
+      validator: function (v) {
+        const phoneRegex = /^[6-9]\d{9}$/;
+        return phoneRegex.test(v);
+      },
       message: 'Invalid phone number format',
     },
   },
@@ -47,6 +56,16 @@ const therapistSchema = new mongoose.Schema({
   },
   education: {
     type: String,
+  },
+  billing: {
+    invoices: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Invoice',
+        required: false,
+        unique: true,
+      },
+    ],
   },
   createdAt: {
     type: Date,

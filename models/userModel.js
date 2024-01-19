@@ -1,37 +1,68 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-    name: {
-      type: String,
-      required: [true, 'Please provide the name']
-    },
+  name: {
+    type: String,
+    required: [true, 'Please provide the name'],
+  },
 
-    email: {
-      type: String,
-      required: [true, 'Please provide the email'],
-      unique: true,
-      lowerCase: true,
-      validate: [validator.isEmail, 'Please provide a valid email'],
-    },
-  
-    password: {
-      type: String,
-      required: [true, 'A user must have a password'],
-      minlength: 8,
-      select: false,
-    },
-  
-    passwordChangedAt: {
-      type: Date,
-    },
+  email: {
+    type: String,
+    required: [true, 'Please provide the email'],
+    unique: true,
+    lowerCase: true,
+    validate: [validator.isEmail, 'Please provide a valid email'],
+  },
 
-    phone: {
-      type: String,
-      default: null
-    }
-  });
+  password: {
+    type: String,
+    required: [true, 'A user must have a password'],
+    minlength: 8,
+    select: false,
+  },
+
+  passwordChangedAt: {
+    type: Date,
+  },
+
+  isDoctor: {
+    type: Boolean,
+    default: true,
+  },
+
+  isOnboard: {
+    type: Boolean,
+    default: false,
+  }, 
+
+  doctor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Therapist',
+    required: false,
+    unique: true
+  },
+
+  patient: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Patient',
+    required: false,
+    unique: true
+  }
+
+  // role: {
+  //   name: {
+  //     type: String,
+  //     enum: ['doctor', 'patient'],
+  //   },
+  //   reference: {
+  //     type: Object,
+  //     required: false,
+  //     unique: true,
+  //   },
+  // },
+});
 
 // Password update (encrypted version)
 userSchema.pre('save', async function (next) {

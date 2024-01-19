@@ -1,5 +1,6 @@
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
+const CircularJSON = require('circular-json');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const User = require('../models/userModel');
@@ -55,6 +56,29 @@ exports.login = catchAsync(async (req, res, next) => {
     data: { user },
   });
 });
+
+/*
+  Update the isOnboard post onboarding
+*/
+
+exports.updateUser = catchAsync(async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
+
+  if (!user) {
+    return next(new AppError('No patient found with this ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user
+    },
+  });
+});
+
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
