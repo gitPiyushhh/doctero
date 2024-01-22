@@ -84,39 +84,44 @@ exports.getAllAppointmentsForPatient = catchAsync(async (req, res) => {
   const { status, type, dateRange, sortBy, sortOrder } = req.query;
   let filters = {
     patient: patientId,
-    type: type || "Home visit",
-    status: status || "Upcoming"
+    type: type || 'Home visit',
+    status: status || 'Upcoming',
   };
 
-  if (dateRange === 'last7days') {
+  if (dateRange === 'Week') {
     filters.date = {
       $gte: moment().subtract(7, 'days').toDate(),
-      $lte: moment().toDate(),
+      $lte: moment().endOf('day').toDate(),
     };
-  } else if (dateRange === 'today') {
+  } else if (dateRange === 'Today') {
     filters.date = {
       $gte: moment().startOf('day').toDate(),
       $lte: moment().endOf('day').toDate(),
     };
-  } else if (dateRange === 'tomorrow') {
+  } else if (dateRange === 'Tomorrow') {
     filters.date = {
       $gte: moment().add(1, 'days').startOf('day').toDate(),
       $lte: moment().add(1, 'days').endOf('day').toDate(),
+    };
+  } else if (dateRange === 'Month') {
+    filters.date = {
+      $gte: moment().startOf('month').toDate(),
+      $lte: moment().endOf('month').toDate(),
     };
   }
 
   // Server side sorting
   let sortOptions = {};
-  if(sortOrder && sortBy) {
+  if (sortOrder && sortBy) {
     sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
   } else {
     // Default sort by date in desc
     sortOptions.date = -1;
   }
 
-
   const appointments = await Appointment.find(filters)
     .populate('therapist')
+    .populate('patient')
     .sort(sortOptions)
     .skip(skip)
     .limit(limit);

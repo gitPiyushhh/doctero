@@ -18,5 +18,6 @@ router
   .delete(therapistController.deleteTherapist);
 
 router.route('/appointments/:id').get(therapistController.getAllAppointmentsForTherpist)
+router.route('/patients/:id').get(therapistController.getAllPatientsForTherapist)
 
 module.exports = router;

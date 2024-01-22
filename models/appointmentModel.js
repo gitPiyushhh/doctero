@@ -16,15 +16,14 @@ const appointmentSchema = new mongoose.Schema({
     required: true,
   },
   startTime: {
-    type: String,
+    type: Number,
   },
   endTime: {
-    type: String,
+    type: Number,
   },
   type: {
     type: String,
     enum: ['Out patient', 'Home visit', 'Remote', 'In patient'],
-    default: 'Home Visit',
   },
   notes: {
     type: String,

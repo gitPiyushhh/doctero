@@ -79,27 +79,38 @@ exports.getAllAppointmentsForTherpist = catchAsync(async (req, res) => {
   const skip = (page - 1) * limit;
 
   // Server side filtering
-  const { status, type, dateRange, sortBy, sortOrder } = req.query;
+  const {
+    status,
+    type,
+    dateRange = 'thisMonth',
+    sortBy,
+    sortOrder,
+  } = req.query;
   let filters = {
     therapist: therapistId,
     type: type || 'Home visit',
     status: status || 'Upcoming',
   };
 
-  if (dateRange === 'last7days') {
+  if (dateRange === 'Week') {
     filters.date = {
       $gte: moment().subtract(7, 'days').toDate(),
       $lte: moment().toDate(),
     };
-  } else if (dateRange === 'today') {
+  } else if (dateRange === 'Today') {
     filters.date = {
       $gte: moment().startOf('day').toDate(),
       $lte: moment().endOf('day').toDate(),
     };
-  } else if (dateRange === 'tomorrow') {
+  } else if (dateRange === 'Tomorrow') {
     filters.date = {
       $gte: moment().add(1, 'days').startOf('day').toDate(),
       $lte: moment().add(1, 'days').endOf('day').toDate(),
+    };
+  } else if (dateRange === 'Month') {
+    filters.date = {
+      $gte: moment().startOf('month').toDate(),
+      $lte: moment().endOf('month').toDate(),
     };
   }
 
@@ -123,6 +134,88 @@ exports.getAllAppointmentsForTherpist = catchAsync(async (req, res) => {
     results: appointments.length,
     data: {
       appointments,
+    },
+  });
+});
+
+exports.getAllPatientsForTherapist  = catchAsync(async (req, res) => {
+  const therapistId = req.params.id;
+  const patientId = req.params.id;
+
+  // Server side pagination
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  // Server side filtering
+  const {
+    status,
+    type,
+    dateRange = 'thisMonth',
+    sortBy,
+    sortOrder,
+  } = req.query;
+  let filters = {
+    therapist: therapistId,
+    type: type || 'Home visit',
+    status: status || 'Upcoming',
+  };
+
+  if (dateRange === 'Month') {
+    filters.date = {
+      $gte: moment().startOf('month').toDate(),
+      $lte: moment().endOf('month').toDate(),
+    };
+  } else if (dateRange === 'Today') {
+    filters.date = {
+      $gte: moment().startOf('day').toDate(),
+      $lte: moment().endOf('day').toDate(),
+    };
+  } else if (dateRange === 'Tomorrow') {
+    filters.date = {
+      $gte: moment().add(1, 'days').startOf('day').toDate(),
+      $lte: moment().add(1, 'days').endOf('day').toDate(),
+    };
+  } else if (dateRange === 'Week') {
+    filters.date = {
+      $gte: moment().subtract(7, 'days').toDate(),
+      $lte: moment().toDate(),
+    };
+  }
+
+  // Server side sorting
+  const sortOptions = {};
+  if (sortOrder && sortBy) {
+    sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
+  } else {
+    // Default sort by date in desc
+    sortOptions.date = -1;
+  }
+
+  const patients = await Appointment.find(filters)
+    .populate('patient')
+    .sort(sortOptions)
+    .skip(skip)
+    .limit(limit);
+  
+  const uniqueIDSet = new Set();
+  const uniquePatients = [];
+
+  patients.forEach(patient => {
+    if(!uniqueIDSet.has(patient.patient._id)) {
+      // Add to set
+      uniqueIDSet.add(patient.patient._id);
+
+      // Add to unique array
+      uniquePatients.push({patient: patient.patient})
+    }
+  })
+
+  res.status(200).json({
+    status: 'success',
+    results: uniquePatients.length,
+    data: {
+      uniquePatients,
     },
   });
 });
