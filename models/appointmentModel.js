@@ -33,6 +33,10 @@ const appointmentSchema = new mongoose.Schema({
     enum: [250, 350, 500, 1000],
     required: [true, 'An appointment must have a fees'],
   },
+  problem: {
+    type: String,
+    required: [true, 'Please enter the problem you have'],
+  },
   status: {
     type: String,
     enum: ['Upcoming', 'Completed', 'Cancelled', 'Rescheduled', 'Pending'],

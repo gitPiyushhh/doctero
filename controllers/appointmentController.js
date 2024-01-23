@@ -1,4 +1,5 @@
 const Appointment = require('../models/appointmentModel');
+const Patient = require('../models/patientModel');
 const catchAsync = require('../utils/catchAsync');
 
 // Route handlers
@@ -25,6 +26,7 @@ exports.getAppointment = catchAsync(async (req, res) => {
 
 exports.createAppointment = catchAsync(async (req, res) => {
   const newAppointment = await Appointment.create(req.body);
+
   res.status(200).json({
     status: 'success',
     data: {
