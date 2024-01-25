@@ -13,7 +13,15 @@ const patientSchema = new mongoose.Schema({
     required: [true, 'A patient must have a name'],
   },
   gender: String,
-  problem: String,
+  problems: {
+    type: [String]
+  },
+  dob: {
+    String
+  },
+  weight : Number,
+  height: Number,
+  bloodGroup: String,
   rating: {
     type: Number, // If present then golden star else grey
   },

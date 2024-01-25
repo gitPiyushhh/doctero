@@ -85,9 +85,11 @@ exports.getAllAppointmentsForTherpist = catchAsync(async (req, res) => {
     dateRange = 'Month',
     sortBy,
     sortOrder,
+    patientId,
   } = req.query;
   let filters = {
     therapist: therapistId,
+    type: type || 'Home visit',
   };
 
   if (dateRange === 'Week') {
@@ -111,7 +113,6 @@ exports.getAllAppointmentsForTherpist = catchAsync(async (req, res) => {
       $lte: moment().endOf('month').toDate(),
     };
   }
-
 
   // Server side sorting
   const sortOptions = {};
@@ -146,13 +147,7 @@ exports.getAllPatientsForTherapist = catchAsync(async (req, res) => {
   const skip = (page - 1) * limit;
 
   // Server side filtering
-  const {
-    status,
-    type,
-    dateRange = 'Year',
-    sortBy,
-    sortOrder,
-  } = req.query;
+  const { status, type, dateRange = 'Year', sortBy, sortOrder } = req.query;
   let filters = {
     therapist: therapistId,
   };
@@ -179,8 +174,6 @@ exports.getAllPatientsForTherapist = catchAsync(async (req, res) => {
     };
   }
 
-  console.log(filters)
-
   // Server side sorting
   const sortOptions = {};
   if (sortOrder && sortBy) {
@@ -205,7 +198,6 @@ exports.getAllPatientsForTherapist = catchAsync(async (req, res) => {
     const date = moment(appointment.date);
 
     if (!uniqueIDSet.has(patientID)) {
-
       // Add to set
       uniqueIDSet.add(patientID);
 
@@ -219,12 +211,38 @@ exports.getAllPatientsForTherapist = catchAsync(async (req, res) => {
       });
     }
   });
-  
+
   res.status(200).json({
     status: 'success',
     results: uniquePatients.length,
     data: {
       uniquePatients,
+    },
+  });
+});
+
+exports.getPatientStartDate = catchAsync(async (req, res) => {
+  const therapistId = req.params.id;
+  const { patientId } = req.query;
+
+  let filters = {
+    therapist: therapistId,
+    patient: patientId,
+  };
+
+  // Fetch appointments from the database
+  const appointments = await Appointment.find(filters).populate('patient');
+
+  // Sort appointments based on date in ascending order
+  appointments.sort((a, b) => moment(a.date).valueOf() - moment(b.date).valueOf());
+
+  // Get the earliest appointment (first element after sorting)
+  const earliestAppointment = appointments[0];
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      earliestAppointment,
     },
   });
 });

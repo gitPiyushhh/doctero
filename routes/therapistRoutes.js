@@ -19,5 +19,6 @@ router
 
 router.route('/appointments/:id').get(therapistController.getAllAppointmentsForTherpist)
 router.route('/patients/:id').get(therapistController.getAllPatientsForTherapist)
+router.route('/patientFirstAppointment/:id').get(therapistController.getPatientStartDate)
 
 module.exports = router;
