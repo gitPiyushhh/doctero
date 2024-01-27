@@ -17,6 +17,7 @@ const appointmentSchema = new mongoose.Schema({
   },
   startTime: {
     type: Number,
+    required: true
   },
   endTime: {
     type: Number,

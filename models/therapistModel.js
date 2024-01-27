@@ -53,9 +53,24 @@ const therapistSchema = new mongoose.Schema({
   },
   experience: {
     type: Number,
+    required: [true, 'PLease tell how much experience you have, 0 for fresher']
   },
   education: {
     type: String,
+  },
+  operationalTime: {
+    startTime: {
+      type: Number,
+      required: [true, 'Please provide us the time you start working']
+    },
+    closeTime: {
+      type: Number,
+      required: [true, 'Please provide us the time you end working']
+    }
+  },
+  fees: {
+    type: Number,
+    required: [true, "Please tell us your consultation fees"]
   },
   billing: {
     invoices: [

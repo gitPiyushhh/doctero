@@ -8,7 +8,8 @@ const router = express.Router();
 // Therapist routes
 router
   .route('/')
-  .get(authController.protect, therapistController.getAllTherapists)
+  // .get(authController.protect, therapistController.getAllTherapists)
+  .get(therapistController.getAllTherapists)
   .post(therapistController.createTherapist);
 
 router

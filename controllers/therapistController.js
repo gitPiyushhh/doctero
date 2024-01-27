@@ -5,7 +5,29 @@ const catchAsync = require('../utils/catchAsync');
 const moment = require('moment');
 
 exports.getAllTherapists = catchAsync(async (req, res) => {
-  const therapists = await Therapist.find();
+  // Pagination
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  // Filtering
+  const { specialization, sortBy, sortOrder } = req.query;
+  let filters = {
+    specialization: specialization,
+  };
+
+  let sortOptions = {};
+  if (sortOrder && sortBy) {
+    sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
+  } else {
+    // Default sort by date in desc
+    sortOptions.date = -1;
+  }
+
+  const therapists = await Therapist.find(filters)
+    .sort(sortOptions)
+    .skip(skip)
+    .limit(limit);
 
   res.status(200).json({
     status: 'success',
@@ -234,7 +256,9 @@ exports.getPatientStartDate = catchAsync(async (req, res) => {
   const appointments = await Appointment.find(filters).populate('patient');
 
   // Sort appointments based on date in ascending order
-  appointments.sort((a, b) => moment(a.date).valueOf() - moment(b.date).valueOf());
+  appointments.sort(
+    (a, b) => moment(a.date).valueOf() - moment(b.date).valueOf(),
+  );
 
   // Get the earliest appointment (first element after sorting)
   const earliestAppointment = appointments[0];
