@@ -24,7 +24,8 @@ const appointmentSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['Out patient', 'Home visit', 'Remote', 'In patient'],
+    enum: ['Home visit', 'Remote'],
+    required: [true, 'Please provide the mode of appoitment']
   },
   notes: {
     type: String,

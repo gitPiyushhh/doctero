@@ -18,9 +18,7 @@ exports.getAllAppointments = catchAsync(async (req, res) => {
 });
 
 exports.getAppointment = catchAsync(async (req, res) => {
-  const appointment = await Appointment.findById(req.params.id)
-    .populate('therapist')
-    .populate('patient');
+  const appointment = await Appointment.findById(req.params.id);
 
   res.status(200).json({
     status: 'success',
