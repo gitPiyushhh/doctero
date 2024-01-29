@@ -82,6 +82,12 @@ const therapistSchema = new mongoose.Schema({
       },
     ],
   },
+  feedbacks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Feedback',
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now(),

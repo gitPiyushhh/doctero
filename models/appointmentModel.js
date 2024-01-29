@@ -31,7 +31,6 @@ const appointmentSchema = new mongoose.Schema({
   },
   amount: {
     type: Number,
-    enum: [250, 350, 500, 1000],
     required: [true, 'An appointment must have a fees'],
   },
   problem: {

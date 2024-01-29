@@ -6,6 +6,7 @@ const appointmentRouter = require('./routes/appointmentRoutes');
 const patientRouter = require('./routes/patientRoutes');
 const authRouter = require('./routes/authRoutes')
 const therapistRouter = require('./routes/therapistRoutes');
+const feedbackRouter = require('./routes/feedbackRoutes');
 const AppError = require('./utils/appError');
 const globalAppError = require('./controllers/errorController')
 
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 app.use('/api/v1/appointments', appointmentRouter); // Route mounting
 app.use('/api/v1/patients', patientRouter); 
 app.use('/api/v1/therapists', therapistRouter); 
+app.use('/api/v1/feedbacks', feedbackRouter); 
 app.use('/api/v1/auth', authRouter); 
 
 // Undefined api access

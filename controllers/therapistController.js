@@ -169,12 +169,18 @@ exports.getAllPatientsForTherapist = catchAsync(async (req, res) => {
   const skip = (page - 1) * limit;
 
   // Server side filtering
-  const { status, type, dateRange = 'Year', sortBy, sortOrder } = req.query;
+  const { status, type, dateRange = 'Year', sortBy, sortOrder, customDate } = req.query;
   let filters = {
     therapist: therapistId,
   };
 
-  if (dateRange === 'Month') {
+  if (customDate) {
+    const selectedDate = moment(customDate).startOf('day');
+    filters.date = {
+      $gte: selectedDate.toDate(),
+      $lte: selectedDate.endOf('day').toDate(),
+    };
+  } else if (dateRange === 'Month') {
     filters.date = {
       $gte: moment().startOf('month').toDate(),
       $lte: moment().endOf('month').toDate(),
