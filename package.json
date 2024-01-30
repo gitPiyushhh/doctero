@@ -6,6 +6,7 @@
   "scripts": {
     "start:dev": "nodemon server.js",
     "start:prod": " NODE_ENV=production nodemon server.js",
+    "start:socket": "nodemon socket.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Piyush",
@@ -22,6 +23,7 @@
     "mongoose": "^8.0.1",
     "morgan": "^1.10.0",
     "sequelize": "^6.35.1",
+    "socket.io": "^4.7.4",
     "twilio": "^4.21.0",
     "validator": "^13.11.0"
   },
