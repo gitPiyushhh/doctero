@@ -13,6 +13,7 @@ const patientSchema = new mongoose.Schema({
     required: [true, 'A patient must have a name'],
   },
   gender: String,
+  age: Number,
   problems: {
     type: [String]
   },
