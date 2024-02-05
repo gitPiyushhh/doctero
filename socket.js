@@ -21,9 +21,10 @@ function handleRoomJoin(io, socket, userToSocketId, socketIdToUser, data) {
   io.to(socket.id).emit('room:join', data);
 }
 
-function handleUserCall(io, socket, to, offer) {
+function handleUserCall(io, socket, to, offer, stream) {
   console.log('Remote offer:', offer);
-  io.to(to).emit('call:incoming', { from: socket.id, offer });
+  console.log("Remote user stream : ", stream)
+  io.to(to).emit('call:incoming', { from: socket.id, offer, remoteStream: stream });
 }
 
 function handleCallAccepted(io, socket, to, answer) {
@@ -46,8 +47,8 @@ io.on('connection', (socket) => {
     handleRoomJoin(io, socket, userToSocketId, socketIdToUser, data);
   });
 
-  socket.on('user:call', ({ to, offer }) => {
-    handleUserCall(io, socket, to, offer);
+  socket.on('user:call', ({ to, offer, stream }) => {
+    handleUserCall(io, socket, to, offer, stream);
   });
 
   socket.on('call:accepted', ({ to, answer }) => {
