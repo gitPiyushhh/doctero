@@ -21,10 +21,9 @@ function handleRoomJoin(io, socket, userToSocketId, socketIdToUser, data) {
   io.to(socket.id).emit('room:join', data);
 }
 
-function handleUserCall(io, socket, to, offer, stream) {
+function handleUserCall(io, socket, to, offer) {
   console.log('Remote offer:', offer);
-  console.log("Remote user stream : ", stream)
-  io.to(to).emit('call:incoming', { from: socket.id, offer, remoteStream: stream });
+  io.to(to).emit('call:incoming', { from: socket.id, offer});
 }
 
 function handleCallAccepted(io, socket, to, answer) {
@@ -39,6 +38,10 @@ function handleNegoDone(io, socket, to, ans) {
   io.to(to).emit('peer:nego:final', { from: socket.id, ans });
 }
 
+function handleChatMessage(io, socket, to, message) {
+  io.to(to).emit('chat:message', { message });
+}
+
 /*
   Socket signals
 */
@@ -47,8 +50,8 @@ io.on('connection', (socket) => {
     handleRoomJoin(io, socket, userToSocketId, socketIdToUser, data);
   });
 
-  socket.on('user:call', ({ to, offer, stream }) => {
-    handleUserCall(io, socket, to, offer, stream);
+  socket.on('user:call', ({ to, offer }) => {
+    handleUserCall(io, socket, to, offer);
   });
 
   socket.on('call:accepted', ({ to, answer }) => {
@@ -61,5 +64,9 @@ io.on('connection', (socket) => {
 
   socket.on('peer:nego:done', ({ to, ans }) => {
     handleNegoDone(io, socket, to, ans);
+  });
+
+  socket.on('chat:message', ({ to, message }) => {
+    handleChatMessage(io, socket, to, message);
   });
 });
