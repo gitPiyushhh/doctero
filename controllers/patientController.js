@@ -137,9 +137,9 @@ exports.getAllAppointmentsForPatient = catchAsync(async (req, res) => {
 
 exports.getLiveAppointmentForPatient = catchAsync(async (req, res) => {
   const patientId = req.params.id;
+  const currentHour = req.params.hour;
   
   const currentDate = moment().startOf('day');
-  const currentHour = moment().hour();
 
   let filters = {
     patient: patientId,
