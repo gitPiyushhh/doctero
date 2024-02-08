@@ -277,6 +277,9 @@ exports.getPatientStartDate = catchAsync(async (req, res) => {
   });
 });
 
+/*
+  Live appointment
+*/
 exports.getLiveAppointmentForTherapist = catchAsync(async (req, res) => {
   const therapistId = req.params.id;
   
