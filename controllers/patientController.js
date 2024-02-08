@@ -134,3 +134,28 @@ exports.getAllAppointmentsForPatient = catchAsync(async (req, res) => {
     },
   });
 });
+
+exports.getLiveAppointmentForPatient = catchAsync(async (req, res) => {
+  const patientId = req.params.id;
+  
+  const currentDate = moment().startOf('day');
+  const currentHour = moment().hour();
+
+  let filters = {
+    patient: patientId,
+    date: {
+      $gte: currentDate.toDate(),
+      $lte: moment().endOf('day').toDate(),
+    },
+    startTime: currentHour,
+  };
+
+  const appointments = await Appointment.find(filters);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      appointments,
+    },
+  });
+});

@@ -17,5 +17,6 @@ router
   .delete(patientController.deletePatient);
 
 router.route('/appointments/:id').get(patientController.getAllAppointmentsForPatient);
+router.route('/liveAppointment/:id').get(patientController.getLiveAppointmentForPatient);
 
 module.exports = router;
