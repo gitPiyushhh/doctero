@@ -276,3 +276,28 @@ exports.getPatientStartDate = catchAsync(async (req, res) => {
     },
   });
 });
+
+exports.getLiveAppointmentForTherapist = catchAsync(async (req, res) => {
+  const therapistId = req.params.id;
+  
+  const currentDate = moment().startOf('day');
+  const currentHour = moment().hour();
+
+  let filters = {
+    therapist: therapistId,
+    date: {
+      $gte: currentDate.toDate(),
+      $lte: moment().endOf('day').toDate(),
+    },
+    startTime: currentHour,
+  };
+
+  const appointments = await Appointment.find(filters);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      appointments,
+    },
+  });
+});
