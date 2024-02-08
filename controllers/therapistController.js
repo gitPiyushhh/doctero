@@ -169,7 +169,14 @@ exports.getAllPatientsForTherapist = catchAsync(async (req, res) => {
   const skip = (page - 1) * limit;
 
   // Server side filtering
-  const { status, type, dateRange = 'Year', sortBy, sortOrder, customDate } = req.query;
+  const {
+    status,
+    type,
+    dateRange = 'Year',
+    sortBy,
+    sortOrder,
+    customDate,
+  } = req.query;
   let filters = {
     therapist: therapistId,
   };
@@ -282,9 +289,9 @@ exports.getPatientStartDate = catchAsync(async (req, res) => {
 */
 exports.getLiveAppointmentForTherapist = catchAsync(async (req, res) => {
   const therapistId = req.params.id;
-  
+  const currentHour = req.params.hour;
+
   const currentDate = moment().startOf('day');
-  const currentHour = moment().hour();
 
   let filters = {
     therapist: therapistId,
@@ -295,7 +302,7 @@ exports.getLiveAppointmentForTherapist = catchAsync(async (req, res) => {
     startTime: currentHour,
   };
 
-  console.log(filters)
+  console.log(filters);
 
   const appointments = await Appointment.find(filters).populate('therapist');
 
