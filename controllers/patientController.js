@@ -150,7 +150,7 @@ exports.getLiveAppointmentForPatient = catchAsync(async (req, res) => {
     startTime: currentHour,
   };
 
-  const appointments = await Appointment.find(filters).populate('patient');
+  const appointments = await Appointment.find(filters).populate('patient').populate('therapist');
 
   res.status(200).json({
     status: 'success',
