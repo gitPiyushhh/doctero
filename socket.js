@@ -42,6 +42,11 @@ function handleChatMessage(io, socket, to, message) {
   io.to(to).emit('chat:message', { message });
 }
 
+const handleCallEnd = (io, socket, to) => {
+  peerService.closePeerConnection(to);
+  io.to(to).emit('call:ended');
+};
+
 /*
   Socket signals
 */
@@ -69,4 +74,8 @@ io.on('connection', (socket) => {
   socket.on('chat:message', ({ to, message }) => {
     handleChatMessage(io, socket, to, message);
   });
+
+  socket.on("call:ended", ({to}) => {
+    handleCallEnd(io, socket, to);
+  })
 });
